@@ -1,97 +1,117 @@
 <section id="sec-ingresos" class="-mt-20">
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
-        <div>
-            <h2 class="text-2xl font-bold text-stone-800">INGRESOS</h2>
-        </div>
-
-        <!-- LADO DERECHO: Filtros de fecha y Botón de acción -->
-        <div class="flex flex-wrap items-center gap-3 w-full md:w-auto justify-end">
-            <!-- Filtro Del -->
-            <div class="flex items-center bg-white border border-stone-300 rounded-full px-3 py-1.5 shadow-sm text-xs">
-                <span class="text-stone-400 font-medium mr-2">DEL:</span>
-                <input type="date" id="in-fecha-inicio" onchange="guardarFiltrosIngresos(); refrescarVistaActual();"
-                    class="bg-transparent text-[10px] font-bold outline-none cursor-pointer">
-            </div>
-
-            <!-- Filtro Al -->
-            <div class="flex items-center bg-white border border-stone-300 rounded-full px-3 py-1.5 shadow-sm text-xs">
-                <span class="text-stone-400 font-medium mr-2">AL:</span>
-                <input type="date" id="in-fecha-fin" onchange="guardarFiltrosIngresos(); refrescarVistaActual();"
-                    class="bg-transparent text-[10px] font-bold outline-none cursor-pointer">
-            </div>
-
-            <!-- Botón Exportar -->
-            <button id="btn-exportar" onclick="exportarFiltradoXLSX('ingreso')"
-                class="flex items-center gap-1.5 bg-white border border-stone-300 hover:bg-stone-50 text-stone-700 px-3.5 py-2 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm transition-all">
-                <span>📊</span> Exportar Ingresos
-            </button>
-        </div>
+    <!-- TÍTULO PRINCIPAL CENTRADO -->
+    <div class="text-center mb-8">
+        <h2 class="text-2xl font-bold text-stone-800 uppercase tracking-wide">INGRESOS</h2>
     </div>
 
+    <!-- CONTENIDO PRINCIPAL: 2 COLUMNAS -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+        <!-- COLUMNA IZQUIERDA: Encabezado CAPTURA por fuera + Tarjeta -->
+        <div>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-stone-500 mb-3 px-1">
+                CAPTURA
+            </h3>
 
-
-
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-20">
-        <div class="bg-white p-8 rounded-xl-custom soft-shadow h-fit">
-            <h2 class="text-xl font-semibold mb-6 italic">DATOS DEL MOVIMIENTO</h2>
-            <div class="space-y-4">
-                <input type="date" id="in-fecha" class="w-full p-4 rounded-xl bg-gray-50 outline-none text-sm border">
-                <select id="in-categoria" class="w-full p-4 rounded-xl bg-gray-50 outline-none text-sm border"></select>
-                <input type="text" id="in-desc" placeholder="Concepto"
-                    class="w-full p-4 rounded-xl bg-gray-50 outline-none text-sm uppercase border">
-                <input type="text" id="in-monto-mask" oninput="formatCurrency(this, 'in-monto-hidden')"
-                    placeholder="$ 0.00 MXN"
-                    class="w-full p-4 rounded-xl bg-gray-50 outline-none text-lg input-mxn border">
-                <input type="hidden" id="in-monto-hidden" value="0">
-                <div class="col-span-2 border-t border-stone-200 pt-4 mt-2">
-                    <label class="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-3">
-                        Comprobantes y/o Facturación
-                    </label>
-                    <!-- CAMPO TICKET -->
-                    <div class="mb-3">
-                        <label class="form-label">Ticket 🎫</label>
-                        <div style="margin-bottom: 3px; font-size: 0.9rem;">
-                            <span style="color: #6b7280; font-style: italic;" id="textoTicketActual">No hay
-                                archivo</span>
+            <div class="bg-white p-8 rounded-xl-custom soft-shadow h-fit">
+                <h2 class="text-xl font-semibold mb-6 italic">DATOS DEL MOVIMIENTO</h2>
+                <div class="space-y-4">
+                    <input type="date" id="in-fecha" class="w-full p-4 rounded-xl bg-gray-50 outline-none text-sm border">
+                    <select id="in-categoria" class="w-full p-4 rounded-xl bg-gray-50 outline-none text-sm border"></select>
+                    <input type="text" id="in-desc" placeholder="Concepto"
+                        class="w-full p-4 rounded-xl bg-gray-50 outline-none text-sm uppercase border">
+                    <input type="text" id="in-monto-mask" oninput="formatCurrency(this, 'in-monto-hidden')"
+                        placeholder="$ 0.00 MXN"
+                        class="w-full p-4 rounded-xl bg-gray-50 outline-none text-lg input-mxn border">
+                    <input type="hidden" id="in-monto-hidden" value="0">
+                    <div class="col-span-2 border-t border-stone-200 pt-4 mt-2">
+                        <label class="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-3">
+                            Comprobantes y/o Facturación
+                        </label>
+                        <!-- CAMPO TICKET -->
+                        <div class="mb-3">
+                            <label class="form-label">Ticket 🎫</label>
+                            <div style="margin-bottom: 3px; font-size: 0.9rem;">
+                                <span style="color: #6b7280; font-style: italic;" id="textoTicketActual">No hay
+                                    archivo</span>
+                            </div>
+                            <input type="file" id="file-ticket" class="form-control"
+                                style="padding: 6px; font-size: 0.85rem;">
                         </div>
-                        <input type="file" id="file-ticket" class="form-control"
-                            style="padding: 6px; font-size: 0.85rem;">
+
+                        <!-- CAMPO FACTURA PDF -->
+                        <div class="mb-3">
+                            <label class="form-label">Factura PDF 📄</label>
+                            <div style="margin-bottom: 3px; font-size: 0.9rem;">
+                                <span style="color: #6b7280; font-style: italic;" id="textoPdfActual">No hay archivo</span>
+                            </div>
+                            <input type="file" id="file-pdf" class="form-control" style="padding: 6px; font-size: 0.85rem;">
+                        </div>
+
+                        <!-- CAMPO FACTURA XML -->
+                        <div class="mb-3">
+                            <label class="form-label">Factura XML 📦</label>
+                            <div style="margin-bottom: 3px; font-size: 0.9rem;">
+                                <span style="color: #6b7280; font-style: italic;" id="textoXmlActual">No hay archivo</span>
+                            </div>
+                            <input type="file" id="file-xml" class="form-control" style="padding: 6px; font-size: 0.85rem;">
+                        </div>
                     </div>
+                    <div class="col-span-2 border-t border-stone-200 pt-4 mt-2 flex gap-3">
+                        <button id="btn-guardar-ingreso" onclick="guardarRegistro('ingreso')"
+                            class="w-full bg-[#D6C7B3] text-white py-4 rounded-xl font-bold uppercase text-xs tracking-widest transition-all">Guardar
+                            Registro</button>
 
-                    <!-- CAMPO FACTURA PDF -->
-                    <div class="mb-3">
-                        <label class="form-label">Factura PDF 📄</label>
-                        <div style="margin-bottom: 3px; font-size: 0.9rem;">
-                            <span style="color: #6b7280; font-style: italic;" id="textoPdfActual">No hay archivo</span>
-                        </div>
-                        <input type="file" id="file-pdf" class="form-control" style="padding: 6px; font-size: 0.85rem;">
-                    </div>
-
-                    <!-- CAMPO FACTURA XML -->
-                    <div class="mb-3">
-                        <label class="form-label">Factura XML 📦</label>
-                        <div style="margin-bottom: 3px; font-size: 0.9rem;">
-                            <span style="color: #6b7280; font-style: italic;" id="textoXmlActual">No hay archivo</span>
-                        </div>
-                        <input type="file" id="file-xml" class="form-control" style="padding: 6px; font-size: 0.85rem;">
+                        <button id="btn-cancelar-ingreso" onclick="cancelarEdicion('ingreso')" style="display: none;"
+                            class="px-5 bg-gray-300 text-gray-700 py-4 rounded-xl font-bold uppercase text-xs tracking-widest transition-all hover:bg-gray-400">
+                            Cancelar
+                        </button>
                     </div>
                 </div>
-                <div class="col-span-2 border-t border-stone-200 pt-4 mt-2 flex gap-3">
-                    <button id="btn-guardar-ingreso" onclick="guardarRegistro('ingreso')"
-                        class="w-full bg-[#D6C7B3] text-white py-4 rounded-xl font-bold uppercase text-xs tracking-widest transition-all">Guardar
-                        Registro</button>
+            </div>
+        </div>
 
-                    <button id="btn-cancelar-ingreso" onclick="cancelarEdicion('ingreso')" style="display: none;"
-                        class="px-5 bg-gray-300 text-gray-700 py-4 rounded-xl font-bold uppercase text-xs tracking-widest transition-all hover:bg-gray-400">
-                        Cancelar
+        <!-- COLUMNA DERECHA: HISTORIAL por fuera + FILTROS DE INGRESOS + Lista -->
+        <div class="space-y-4">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-stone-500 px-1">
+                HISTORIAL
+            </h3>
+
+            <!-- Sección de Filtros -->
+            <div class="bg-white p-6 rounded-xl-custom soft-shadow">
+                <h4 class="text-xs font-bold uppercase tracking-wider text-stone-500 mb-4">
+                    FILTROS DE INGRESOS
+                </h4>
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                    <div class="flex flex-wrap items-center gap-3">
+                        <!-- Filtro Del -->
+                        <div class="flex items-center bg-stone-50 border border-stone-300 rounded-full px-3 py-1.5 text-xs">
+                            <span class="text-stone-400 font-medium mr-2">DEL:</span>
+                            <input type="date" id="in-fecha-inicio" onchange="guardarFiltrosIngresos(); refrescarVistaActual();"
+                                class="bg-transparent text-[10px] font-bold outline-none cursor-pointer">
+                        </div>
+
+                        <!-- Filtro Al -->
+                        <div class="flex items-center bg-stone-50 border border-stone-300 rounded-full px-3 py-1.5 text-xs">
+                            <span class="text-stone-400 font-medium mr-2">AL:</span>
+                            <input type="date" id="in-fecha-fin" onchange="guardarFiltrosIngresos(); refrescarVistaActual();"
+                                class="bg-transparent text-[10px] font-bold outline-none cursor-pointer">
+                        </div>
+                    </div>
+
+                    <!-- Botón Exportar -->
+                    <button id="btn-exportar" onclick="exportarFiltradoXLSX('ingreso')"
+                        class="flex items-center gap-1.5 bg-white border border-stone-300 hover:bg-stone-50 text-stone-700 px-3.5 py-2 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm transition-all">
+                        <span>📊</span> Exportar Ingresos
                     </button>
                 </div>
             </div>
-        </div>
-        <div class="bg-white p-8 rounded-xl-custom soft-shadow">
-            <h2 class="text-sm font-bold uppercase opacity-30 mb-6 flex justify-between">Historial <span id="count-in">0
-                    Movimientos</span></h2>
-            <div id="lista-ingresos" class="list-container space-y-3"></div>
+
+            <!-- Tarjeta del Historial -->
+            <div class="bg-white p-8 rounded-xl-custom soft-shadow">
+                <h2 class="text-sm font-bold uppercase opacity-30 mb-6 flex justify-between">Historial <span id="count-in">0
+                        Movimientos</span></h2>
+                <div id="lista-ingresos" class="list-container space-y-3"></div>
+            </div>
         </div>
     </div>
 </section>
